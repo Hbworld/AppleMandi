@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">AppleMandi</string>
+    <string name="next">Next</string>
+    <string name="hint_loyalty_card_id">LCI1234…</string>
+    <string name="loyalty_card_identifier">Loyalty card identifier</string>
+    <string name="hint_seller_name">Rishabh..</string>
+    <string name="seller_name">Seller Name</string>
+    <string name="applied_loyalty_index">Applied loyalty index %.02f</string>
+    <string name="gross_price">%.02f INR</string>
+    <string name="gross_price_text">Gross price</string>
+    <string name="hint_gross_weight">25…</string>
+    <string name="gross_weight">Gross Weight (In Tonnes)</string>
+    <string name="choose_village">Choose Village</string>
+    <string name="village_name">Village Name</string>
+    <string name="sell_my_produce">Sell My Produce</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="thank_you_seller">Thank you %s for selling quality produce</string>
+    <string name="sell_more">Sell More</string>
+    <string name="price_confirmation">Please ensure you receive %.02f INR for %d Tonnes of your produce</string>
+</resources>

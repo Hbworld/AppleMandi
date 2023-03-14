@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/sellerFragment">
+
+    <fragment
+        android:id="@+id/sellerFragment"
+        android:name="com.applemandi.android.view.fragment.SellerFragment"
+        android:label="seller_fragment"
+        tools:layout="@layout/fragment_seller">
+        <action
+            android:id="@+id/action_sellerFragment_to_sellFragment"
+            app:destination="@id/sellFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sellFragment"
+        android:name="com.applemandi.android.view.fragment.SellFragment"
+        android:label="sell_fragment"
+        tools:layout="@layout/fragment_sell">
+        <action
+            android:id="@+id/action_sellFragment_to_confirmationFragment"
+            app:destination="@id/confirmationFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="seller"
+            app:argType="com.applemandi.android.data.model.Seller" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/confirmationFragment"
+        android:name="com.applemandi.android.view.fragment.ConfirmationFragment"
+        android:label="confirmation_fragment"
+        tools:layout="@layout/fragment_confirmation">
+        <argument
+            android:name="sellOrder"
+            app:argType="com.applemandi.android.data.model.SellOrder" />
+
+    </fragment>
+
+</navigation>

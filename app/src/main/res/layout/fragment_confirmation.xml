@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sellOrder"
+            type="com.applemandi.android.data.model.SellOrder" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_sheet_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_color_red_light">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_apple"
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:layout_marginTop="56dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_apple_basket" />
+
+        <TextView
+            android:id="@+id/tv_thank_you"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="36dp"
+            android:gravity="center"
+            thankYou="@{sellOrder.sellerName}"
+            tools:text="@string/thank_you_seller"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintTop_toBottomOf="@id/iv_apple" />
+
+        <TextView
+            android:id="@+id/tv_sell_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="36dp"
+            android:gravity="center"
+            grossPrice="@{sellOrder.grossPrice}"
+            grossWeight="@{sellOrder.grossWeight}"
+            tools:text="@string/price_confirmation"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_thank_you" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_sell_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_solid_green_round_rect"
+            android:text="@string/sell_more"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_sell_confirm" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
