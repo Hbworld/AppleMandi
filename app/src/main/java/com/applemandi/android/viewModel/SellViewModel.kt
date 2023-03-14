@@ -1,8 +1,11 @@
 package com.applemandi.android.viewModel
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.applemandi.android.R
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
 import com.applemandi.android.domain.PriceUseCase
@@ -11,8 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +23,9 @@ class SellViewModel @Inject constructor(
     private val sellUseCase: SellUseCase,
     private val priceUseCase: PriceUseCase
 ) : ViewModel() {
+
+    private val _errorMessage = MutableSharedFlow<Unit>()
+    val errorMessage : SharedFlow<Unit> get() = _errorMessage
 
     private val _villages = MutableStateFlow<List<Village>>(listOf())
     val villages: StateFlow<List<Village>> get() = _villages
@@ -50,7 +55,11 @@ class SellViewModel @Inject constructor(
     private fun loadVillages() {
 
         viewModelScope.launch {
-            sellUseCase.getAllVillages().collect {
+            sellUseCase.getAllVillages()
+                .catch {
+                    _errorMessage.emit(Unit)
+                }
+                .collect {
                 Log.d("loadVillages", it.toString())
                 _villages.emit(it)
 
@@ -109,5 +118,8 @@ class SellViewModel @Inject constructor(
         }
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("SellViewModel", "onCleared")
+    }
 }

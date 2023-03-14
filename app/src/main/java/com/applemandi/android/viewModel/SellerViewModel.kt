@@ -1,5 +1,6 @@
 package com.applemandi.android.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.applemandi.android.data.model.Seller
@@ -8,14 +9,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCase) :
     ViewModel() {
+
+    private val _errorMessage = MutableSharedFlow<Unit>()
+    val errorMessage: SharedFlow<Unit> get() = _errorMessage
 
     private var debounceJob: Job? = null
 
@@ -40,17 +43,23 @@ class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCa
 
     private fun onSellerNameChanged(char: CharSequence) {
         viewModelScope.launch {
-            sellerUseCase.getSellerByName(char.toString()).collect {
-                _seller.emit(it)
-            }
+            sellerUseCase.getSellerByName(char.toString())
+                .catch {
+                    _errorMessage.emit(Unit)
+                }.collect {
+                    _seller.emit(it)
+                }
         }
     }
 
     private fun onLoyaltyCardIdChanged(char: CharSequence) {
         viewModelScope.launch {
-            sellerUseCase.getSellerByLCId(char.toString()).collect {
-                _seller.emit(it)
-            }
+            sellerUseCase.getSellerByLCId(char.toString())
+                .catch {
+                    _errorMessage.emit(Unit)
+                }.collect {
+                    _seller.emit(it)
+                }
         }
     }
 
@@ -65,5 +74,10 @@ class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCa
             delay(waitMs)
             func(char)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("SellerViewModel", "onCleared")
     }
 }
