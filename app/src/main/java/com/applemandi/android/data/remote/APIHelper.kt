@@ -3,7 +3,7 @@ package com.applemandi.android.data.remote
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
 
-interface APIService {
+interface APIHelper {
 
     fun getAllVillages(): List<Village>
 
@@ -12,7 +12,7 @@ interface APIService {
     fun getSellerByLCId(id: String): Seller?
 
 
-    class Impl : APIService {
+    class Impl : APIHelper {
 
         override fun getAllVillages(): List<Village> {
             return listOf(
@@ -25,7 +25,7 @@ interface APIService {
         }
 
         override fun getSellerByName(name: String): Seller? {
-             return getAllSellers().find { seller -> seller.name.equals(name, true) }
+            return getAllSellers().find { seller -> seller.name.equals(name, true) }
         }
 
         override fun getSellerByLCId(id: String): Seller? {

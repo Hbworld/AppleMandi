@@ -1,12 +1,10 @@
 package com.applemandi.android.data.remote
 
-import org.junit.Assert.*
-
 import org.junit.Test
 
-class APIServiceTest {
+class APIHelperTest {
 
-    private val apiService = APIService.Impl()
+    private val apiHelper = APIHelper.Impl()
 
     @Test
     fun getSellerByName() {

@@ -1,14 +1,12 @@
 package com.applemandi.android.data.repository
 
 import android.util.Log
-import com.applemandi.android.data.remote.APIService
-import com.applemandi.android.data.local.AppDatabase
+import com.applemandi.android.data.local.DatabaseHelper
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
-import kotlinx.coroutines.Dispatchers
+import com.applemandi.android.data.remote.APIHelper
+import com.applemandi.android.domain.BaseDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 
 interface DataRepository {
 
@@ -19,28 +17,26 @@ interface DataRepository {
     fun getSellerByLCId(id: String): Seller?
 
     class Impl constructor(
-        private val apiService: APIService,
-        private val appDatabase: AppDatabase
+        private val apiHelper: APIHelper,
+        private val databaseHelper: DatabaseHelper
     ) : DataRepository, BaseDataSource() {
 
         override fun getAllVillages(): Flow<List<Village>> {
-
             return performOperation(
-                databaseQuery = { appDatabase.villageDao().getAllFeed() },
-                networkCall = { apiService.getAllVillages() },
+                databaseQuery = { databaseHelper.getVillages() },
+                networkCall = { apiHelper.getAllVillages() },
                 saveResult = {
                     Log.d("performOperation", it.toString())
-                    appDatabase.villageDao().insertAll(it)
+                    databaseHelper.updateVillages(it)
                 })
-
         }
 
         override fun getSellerByName(name: String): Seller? {
-            return apiService.getSellerByName(name)
+            return apiHelper.getSellerByName(name)
         }
 
         override fun getSellerByLCId(id: String): Seller? {
-            return apiService.getSellerByLCId(id)
+            return apiHelper.getSellerByLCId(id)
         }
 
     }

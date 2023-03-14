@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
-import com.applemandi.android.data.repository.DataRepository
 import com.applemandi.android.domain.PriceUseCase
+import com.applemandi.android.domain.SellUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SellViewModel @Inject constructor(
-    private val dataRepository: DataRepository,
+    private val sellUseCase: SellUseCase,
     private val priceUseCase: PriceUseCase
 ) : ViewModel() {
 
@@ -28,7 +28,7 @@ class SellViewModel @Inject constructor(
     lateinit var seller: Seller
 
     private val _villageRate = MutableStateFlow(0.0)
-    val villageRate: StateFlow<Double> get() = _villageRate
+    private val villageRate: StateFlow<Double> get() = _villageRate
 
     private val _grossWeight = MutableStateFlow(0)
     val grossWeight: StateFlow<Int> get() = _grossWeight
@@ -43,21 +43,20 @@ class SellViewModel @Inject constructor(
         loadVillages()
     }
 
-    fun setSellerData(seller: Seller){
+    fun setSellerData(seller: Seller) {
         this.seller = seller
     }
 
     private fun loadVillages() {
 
         viewModelScope.launch {
-            dataRepository.getAllVillages().collect {
+            sellUseCase.getAllVillages().collect {
                 Log.d("loadVillages", it.toString())
                 _villages.emit(it)
 
             }
         }
     }
-
 
     fun updateVillageRate(rate: Double) {
         viewModelScope.launch {
@@ -67,8 +66,7 @@ class SellViewModel @Inject constructor(
     }
 
     fun onGrossWeightChange(char: CharSequence?) {
-        debounce(800, viewModelScope, ::onGrossWeightChanged, char)
-
+        debounce(coroutineScope = viewModelScope, func = ::onGrossWeightChanged, char = char)
     }
 
     private fun onGrossWeightChanged(char: CharSequence?) {
@@ -86,11 +84,13 @@ class SellViewModel @Inject constructor(
         }
     }
 
-    fun updateGrossPrice() {
+    private fun updateGrossPrice() {
         viewModelScope.launch {
-            val price = priceUseCase.calculateGrossPrice(rate = villageRate.value,
-            grossWeight = grossWeight.value,
-            loyaltyCardIndex = seller.loyaltyIndex)
+            val price = priceUseCase.calculateGrossPrice(
+                rate = villageRate.value,
+                grossWeight = grossWeight.value,
+                loyaltyCardIndex = seller.loyaltyIndex
+            )
 
             _grossPrice.emit(price)
         }
