@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface SellUseCase {
 
-    fun getAllVillages(): Flow<List<Village>>
+    suspend fun getAllVillages(): Flow<List<Village>>
 
 
     class Impl(private val dataRepository: DataRepository) : SellUseCase{
 
-        override fun getAllVillages(): Flow<List<Village>> {
+        override suspend fun getAllVillages(): Flow<List<Village>> {
             return dataRepository.getAllVillages()
         }
     }

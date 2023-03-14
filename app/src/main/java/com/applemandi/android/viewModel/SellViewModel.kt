@@ -11,11 +11,8 @@ import com.applemandi.android.data.model.Village
 import com.applemandi.android.domain.PriceUseCase
 import com.applemandi.android.domain.SellUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,13 +51,13 @@ class SellViewModel @Inject constructor(
 
     private fun loadVillages() {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             sellUseCase.getAllVillages()
                 .catch {
+                    Log.d("loadVillages", "error -> "+it.message)
                     _errorMessage.emit(Unit)
                 }
                 .collect {
-                Log.d("loadVillages", it.toString())
                 _villages.emit(it)
 
             }
@@ -116,10 +113,5 @@ class SellViewModel @Inject constructor(
             delay(waitMs)
             func(char)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("SellViewModel", "onCleared")
     }
 }

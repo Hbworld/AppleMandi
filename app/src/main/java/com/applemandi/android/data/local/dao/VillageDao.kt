@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface VillageDao {
 
     @Query("SELECT * FROM villageTable")
-    fun getVillages(): List<Village>
+    fun getVillages(): Flow<List<Village>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(villages: List<Village>)

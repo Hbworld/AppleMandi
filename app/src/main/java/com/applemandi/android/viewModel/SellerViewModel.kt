@@ -75,9 +75,4 @@ class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCa
             func(char)
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("SellerViewModel", "onCleared")
-    }
 }
