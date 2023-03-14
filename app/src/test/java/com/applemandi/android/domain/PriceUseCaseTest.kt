@@ -12,6 +12,7 @@ class PriceUseCaseTest {
     fun calculateGrossPrice() {
 
         val expectedGrossPrice = 1000.00
+
         val finalGrossPrice = priceUseCase.calculateGrossPrice(
             rate = 1.00,
             loyaltyCardIndex = 1.00,

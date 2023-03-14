@@ -9,4 +9,3 @@ plugins {
 
 }
 
-apply from: 'gradle-scripts/dependencies.gradle'
