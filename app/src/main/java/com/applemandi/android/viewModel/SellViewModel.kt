@@ -1,15 +1,12 @@
 package com.applemandi.android.viewModel
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.applemandi.android.R
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
 import com.applemandi.android.domain.PriceUseCase
-import com.applemandi.android.domain.SellUseCase
+import com.applemandi.android.domain.VillageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -17,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SellViewModel @Inject constructor(
-    private val sellUseCase: SellUseCase,
+    private val villageUseCase: VillageUseCase,
     private val priceUseCase: PriceUseCase
 ) : ViewModel() {
 
@@ -47,7 +44,7 @@ class SellViewModel @Inject constructor(
 
      fun loadVillages() {
         viewModelScope.launch(Dispatchers.IO) {
-            sellUseCase.getAllVillages()
+            villageUseCase.getAllVillages()
                 .catch {
                     Log.d("loadVillages", "error -> "+it.message)
                     _errorMessage.emit(Unit)

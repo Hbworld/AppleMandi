@@ -6,7 +6,7 @@ import com.applemandi.android.data.local.AppDatabase
 import com.applemandi.android.data.local.DatabaseHelper
 import com.applemandi.android.data.repository.DataRepository
 import com.applemandi.android.domain.PriceUseCase
-import com.applemandi.android.domain.SellUseCase
+import com.applemandi.android.domain.VillageUseCase
 import com.applemandi.android.domain.SellerUseCase
 import dagger.Module
 import dagger.Provides
@@ -33,8 +33,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideSellUseCase(dataRepository: DataRepository) : SellUseCase {
-        return SellUseCase.Impl(dataRepository)
+    fun provideSellUseCase(dataRepository: DataRepository) : VillageUseCase {
+        return VillageUseCase.Impl(dataRepository)
     }
 
 
