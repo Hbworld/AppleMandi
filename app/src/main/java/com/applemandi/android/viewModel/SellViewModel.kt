@@ -41,16 +41,11 @@ class SellViewModel @Inject constructor(
     private var debounceJob: Job? = null
 
 
-    init {
-        loadVillages()
-    }
-
     fun setSellerData(seller: Seller) {
         this.seller = seller
     }
 
-    private fun loadVillages() {
-
+     fun loadVillages() {
         viewModelScope.launch(Dispatchers.IO) {
             sellUseCase.getAllVillages()
                 .catch {

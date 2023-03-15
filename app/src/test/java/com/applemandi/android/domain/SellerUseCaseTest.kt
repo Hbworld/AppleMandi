@@ -6,16 +6,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
-
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
+@RunWith(MockitoJUnitRunner::class)
 class SellerUseCaseTest {
 
     private lateinit var sellerUseCase: SellerUseCase
@@ -29,22 +27,31 @@ class SellerUseCaseTest {
     private val unRegisteredTestLCId = "UnRegistered Test LC Id"
 
     @Before
-    fun setup(){
-        MockitoAnnotations.openMocks(this)
+    fun setup() {
         sellerUseCase = SellerUseCase.Impl(dataRepository)
     }
 
     @Test
-    fun getSellerByName() : Unit = runTest {
+    fun getSellerByName(): Unit = runTest {
 
         // testing for registered user
         Mockito.`when`(dataRepository.getSellerByName(registeredTestName))
-            .thenReturn(Seller(name = registeredTestName, loyaltyCardId = registeredTestLCId, isRegistered = true))
+            .thenReturn(
+                Seller(
+                    name = registeredTestName,
+                    loyaltyCardId = registeredTestLCId,
+                    isRegistered = true
+                )
+            )
 
-        sellerUseCase.getSellerByName(registeredTestName).collect{
+        sellerUseCase.getSellerByName(registeredTestName).collect {
             assertEquals(
                 it,
-                Seller(name = registeredTestName, loyaltyCardId = registeredTestLCId, isRegistered = true)
+                Seller(
+                    name = registeredTestName,
+                    loyaltyCardId = registeredTestLCId,
+                    isRegistered = true
+                )
             )
         }
 
@@ -52,7 +59,7 @@ class SellerUseCaseTest {
         Mockito.`when`(dataRepository.getSellerByName(unRegisteredTestName))
             .thenReturn(null)
 
-        sellerUseCase.getSellerByName(unRegisteredTestName).collect{
+        sellerUseCase.getSellerByName(unRegisteredTestName).collect {
             assertEquals(
                 it,
                 Seller(name = unRegisteredTestName, loyaltyCardId = null, isRegistered = false)
@@ -61,16 +68,26 @@ class SellerUseCaseTest {
     }
 
     @Test
-    fun getSellerByLCId() : Unit = runTest {
+    fun getSellerByLCId(): Unit = runTest {
 
         // testing for registered loyalty card id
         Mockito.`when`(dataRepository.getSellerByLCId(registeredTestLCId))
-            .thenReturn(Seller(name = registeredTestName, loyaltyCardId = registeredTestLCId, isRegistered = true))
+            .thenReturn(
+                Seller(
+                    name = registeredTestName,
+                    loyaltyCardId = registeredTestLCId,
+                    isRegistered = true
+                )
+            )
 
-        sellerUseCase.getSellerByLCId(registeredTestLCId).collect{
+        sellerUseCase.getSellerByLCId(registeredTestLCId).collect {
             assertEquals(
                 it,
-                Seller(name = registeredTestName, loyaltyCardId = registeredTestLCId, isRegistered = true)
+                Seller(
+                    name = registeredTestName,
+                    loyaltyCardId = registeredTestLCId,
+                    isRegistered = true
+                )
             )
         }
 
@@ -78,7 +95,7 @@ class SellerUseCaseTest {
         Mockito.`when`(dataRepository.getSellerByLCId(unRegisteredTestLCId))
             .thenReturn(null)
 
-        sellerUseCase.getSellerByLCId(unRegisteredTestLCId).collect{
+        sellerUseCase.getSellerByLCId(unRegisteredTestLCId).collect {
             assertEquals(
                 it,
                 Seller(name = null, loyaltyCardId = unRegisteredTestLCId, isRegistered = false)

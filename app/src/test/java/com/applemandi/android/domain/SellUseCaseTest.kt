@@ -1,22 +1,23 @@
 package com.applemandi.android.domain
 
 
+import app.cash.turbine.test
 import com.applemandi.android.data.model.Village
 import com.applemandi.android.data.repository.DataRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.verify
+import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
+@RunWith(MockitoJUnitRunner::class)
 class SellUseCaseTest {
 
     private lateinit var sellUseCase: SellUseCase
@@ -26,7 +27,6 @@ class SellUseCaseTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
         sellUseCase = SellUseCase.Impl(dataRepository)
 
     }
@@ -35,17 +35,14 @@ class SellUseCaseTest {
     @Test
     fun getAllVillages(): Unit = runTest {
 
-        Mockito.`when`(dataRepository.getAllVillages())
-            .thenReturn(flow {
-                emit(listOf(Village("TestVillage", 1.0)))
-            })
+        doReturn(flowOf(listOf(Village("TestVillage", 1.0)))).`when`(dataRepository)
+            .getAllVillages()
 
-        sellUseCase.getAllVillages().collect {
-            assertEquals(
-                listOf(Village("TestVillage", 1.0)),
-                it
-            )
+        sellUseCase.getAllVillages().test {
+            assertEquals(listOf(Village("TestVillage", 1.0)), awaitItem())
+            cancelAndIgnoreRemainingEvents()
         }
+        verify(dataRepository).getAllVillages()
 
 
     }

@@ -56,6 +56,7 @@ class SellFragment : Fragment() {
         handleViewActions()
         handleObservers()
 
+        sellViewModel.loadVillages()
         sellViewModel.setSellerData(args.seller)
     }
 
