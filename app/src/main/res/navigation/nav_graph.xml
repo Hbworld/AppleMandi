@@ -12,11 +12,7 @@
         tools:layout="@layout/fragment_seller">
         <action
             android:id="@+id/action_sellerFragment_to_sellFragment"
-            app:destination="@id/sellFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/sellFragment"/>
     </fragment>
 
     <fragment
@@ -26,11 +22,7 @@
         tools:layout="@layout/fragment_sell">
         <action
             android:id="@+id/action_sellFragment_to_confirmationFragment"
-            app:destination="@id/confirmationFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/confirmationFragment"/>
         <argument
             android:name="seller"
             app:argType="com.applemandi.android.data.model.Seller" />
