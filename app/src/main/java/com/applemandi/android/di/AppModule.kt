@@ -19,38 +19,32 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
 
-    @Singleton
     @Provides
     fun providePriceUseCase() : PriceUseCase{
         return PriceUseCase.Impl()
     }
 
-    @Singleton
     @Provides
     fun provideSellerUseCase(dataRepository: DataRepository) : SellerUseCase{
         return SellerUseCase.Impl(dataRepository)
     }
 
-    @Singleton
     @Provides
     fun provideSellUseCase(dataRepository: DataRepository) : VillageUseCase {
         return VillageUseCase.Impl(dataRepository)
     }
 
 
-    @Singleton
     @Provides
     fun provideDataRepository(apiHelper: APIHelper, databaseHelper: DatabaseHelper) : DataRepository {
         return DataRepository.Impl(apiHelper, databaseHelper)
     }
 
-    @Singleton
     @Provides
     fun provideDatabaseHelper(appDatabase: AppDatabase) : DatabaseHelper {
         return DatabaseHelper.Impl(appDatabase)
     }
 
-    @Singleton
     @Provides
     fun provideApiService() : APIHelper {
         return APIHelper.Impl()
