@@ -3,6 +3,7 @@ package com.applemandi.android.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.applemandi.android.data.model.Seller
+import com.applemandi.android.domain.DebounceUseCase
 import com.applemandi.android.domain.SellerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -10,19 +11,20 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
-class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCase) :
+class SellerViewModel @Inject constructor(
+    private val sellerUseCase: SellerUseCase,
+    private val debounceUseCase: DebounceUseCase
+    ) :
     ViewModel() {
 
     private val _errorMessage = MutableSharedFlow<Unit>()
     val errorMessage: SharedFlow<Unit> get() = _errorMessage
 
-    private var debounceJob: Job? = null
-
     private val _seller = MutableStateFlow(Seller(name = null, loyaltyCardId = null))
     val seller: StateFlow<Seller> get() = _seller
 
     fun onSellerNameChange(char: CharSequence) {
-        if (char.isNotEmpty()) debounce(
+        if (char.isNotEmpty()) debounceUseCase.debounce(
             coroutineScope = viewModelScope,
             func = ::onSellerNameChanged,
             char = char
@@ -30,7 +32,7 @@ class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCa
     }
 
     fun onLoyaltyCardIdChange(char: CharSequence) {
-        if (char.isNotEmpty()) debounce(
+        if (char.isNotEmpty()) debounceUseCase.debounce(
             coroutineScope = viewModelScope,
             func = ::onLoyaltyCardIdChanged,
             char = char
@@ -56,19 +58,6 @@ class SellerViewModel @Inject constructor(private val sellerUseCase: SellerUseCa
                 }.collect {
                     _seller.emit(it)
                 }
-        }
-    }
-
-    private fun debounce(
-        waitMs: Long = 500L,
-        coroutineScope: CoroutineScope,
-        func: (CharSequence) -> Unit,
-        char: CharSequence
-    ) {
-        debounceJob?.cancel()
-        debounceJob = coroutineScope.launch {
-            delay(waitMs)
-            func(char)
         }
     }
 }

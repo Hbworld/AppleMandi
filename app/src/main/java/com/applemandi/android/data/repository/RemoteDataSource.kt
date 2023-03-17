@@ -1,9 +1,9 @@
-package com.applemandi.android.data.remote
+package com.applemandi.android.data.repository
 
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
 
-interface APIHelper {
+interface RemoteDataSource {
 
     fun getAllVillages(): List<Village>
 
@@ -12,7 +12,7 @@ interface APIHelper {
     fun getSellerByLCId(id: String): Seller?
 
 
-    class Impl : APIHelper {
+    class Impl : RemoteDataSource {
 
         override fun getAllVillages(): List<Village> {
             return listOf(

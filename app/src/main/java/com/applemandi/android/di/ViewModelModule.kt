@@ -1,5 +1,6 @@
 package com.applemandi.android.di
 
+import com.applemandi.android.domain.DebounceUseCase
 import com.applemandi.android.domain.PriceUseCase
 import com.applemandi.android.domain.SellerUseCase
 import com.applemandi.android.domain.VillageUseCase
@@ -19,15 +20,16 @@ class ViewModelModule {
     @Provides
     fun provideSellViewModel(
         villageUseCase: VillageUseCase,
-        priceUseCase: PriceUseCase
+        priceUseCase: PriceUseCase,
+        debounceUseCase: DebounceUseCase
     ): SellViewModel {
-        return SellViewModel(villageUseCase, priceUseCase)
+        return SellViewModel(villageUseCase, priceUseCase, debounceUseCase)
     }
 
     @ViewModelScoped
     @Provides
-    fun provideSellerViewModel(sellerUseCase: SellerUseCase): SellerViewModel {
-        return SellerViewModel(sellerUseCase)
+    fun provideSellerViewModel(sellerUseCase: SellerUseCase, debounceUseCase: DebounceUseCase): SellerViewModel {
+        return SellerViewModel(sellerUseCase, debounceUseCase)
     }
 
 

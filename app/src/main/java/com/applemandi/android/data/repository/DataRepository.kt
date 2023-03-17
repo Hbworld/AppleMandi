@@ -1,11 +1,11 @@
 package com.applemandi.android.data.repository
 
-import com.applemandi.android.data.local.DatabaseHelper
+import android.util.Log
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
-import com.applemandi.android.data.remote.APIHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 
 interface DataRepository {
 
@@ -16,36 +16,42 @@ interface DataRepository {
     fun getSellerByLCId(id: String): Seller?
 
     class Impl constructor(
-        private val apiHelper: APIHelper,
-        private val databaseHelper: DatabaseHelper
+        private val remoteDataSource: RemoteDataSource,
+        private val localDataSource: LocalDataSource
     ) : DataRepository {
 
         override suspend fun getAllVillages(): Flow<List<Village>> {
-            return databaseHelper.getVillages()
+            return localDataSource.getVillages()
+                .onStart {
+                    Log.d("getAllVillages", "it.toString()")
+
+                }
                 .onEach { villages ->
+                    Log.d("getAllVillages", "it.toString()2")
                     if (villages.isEmpty()) {
+                        Log.d("getAllVillages", "it.toString()3")
                         fetchVillages()
                     }
                 }
         }
 
         override fun getSellerByName(name: String): Seller? {
-            return apiHelper.getSellerByName(name)
+            return remoteDataSource.getSellerByName(name)
         }
 
         override fun getSellerByLCId(id: String): Seller? {
-            return apiHelper.getSellerByLCId(id)
+            return remoteDataSource.getSellerByLCId(id)
         }
 
         private suspend fun fetchVillages(): List<Village> {
-            return apiHelper.getAllVillages()
+            return remoteDataSource.getAllVillages()
                 .also {
                     saveVillages(it)
                 }
         }
 
         private suspend fun saveVillages(villages: List<Village>) {
-            databaseHelper.updateVillages(villages)
+            localDataSource.updateVillages(villages)
         }
 
     }

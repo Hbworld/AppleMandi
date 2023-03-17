@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.applemandi.android.data.model.Seller
 import com.applemandi.android.data.model.Village
+import com.applemandi.android.domain.DebounceUseCase
 import com.applemandi.android.domain.PriceUseCase
 import com.applemandi.android.domain.VillageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SellViewModel @Inject constructor(
     private val villageUseCase: VillageUseCase,
-    private val priceUseCase: PriceUseCase
+    private val priceUseCase: PriceUseCase,
+    private val debounceUseCase: DebounceUseCase
 ) : ViewModel() {
 
     private val _errorMessage = MutableSharedFlow<Unit>()
@@ -34,9 +36,6 @@ class SellViewModel @Inject constructor(
 
     private val _grossPrice = MutableStateFlow(0.0)
     val grossPrice: StateFlow<Double> get() = _grossPrice
-
-    private var debounceJob: Job? = null
-
 
     fun setSellerData(seller: Seller) {
         this.seller = seller
@@ -63,11 +62,11 @@ class SellViewModel @Inject constructor(
         }
     }
 
-    fun onGrossWeightChange(char: CharSequence?) {
-        debounce(coroutineScope = viewModelScope, func = ::onGrossWeightChanged, char = char)
+    fun onGrossWeightChange(char: CharSequence) {
+        debounceUseCase.debounce(coroutineScope = viewModelScope, func = ::onGrossWeightChanged, char = char)
     }
 
-    private fun onGrossWeightChanged(char: CharSequence?) {
+    private fun onGrossWeightChanged(char: CharSequence) {
         try {
             updateGrossWeight(grossWeight = Integer.valueOf(char.toString()))
         } catch (e: NumberFormatException) {
@@ -91,19 +90,6 @@ class SellViewModel @Inject constructor(
             )
 
             _grossPrice.emit(price)
-        }
-    }
-
-    private fun debounce(
-        waitMs: Long = 500L,
-        coroutineScope: CoroutineScope,
-        func: (CharSequence?) -> Unit,
-        char: CharSequence?
-    ) {
-        debounceJob?.cancel()
-        debounceJob = coroutineScope.launch {
-            delay(waitMs)
-            func(char)
         }
     }
 }

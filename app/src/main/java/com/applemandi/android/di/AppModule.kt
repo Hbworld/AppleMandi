@@ -1,10 +1,11 @@
 package com.applemandi.android.di
 
 import android.content.Context
-import com.applemandi.android.data.remote.APIHelper
-import com.applemandi.android.data.local.AppDatabase
-import com.applemandi.android.data.local.DatabaseHelper
+import com.applemandi.android.data.repository.RemoteDataSource
+import com.applemandi.android.data.local.databse.AppDatabase
+import com.applemandi.android.data.repository.LocalDataSource
 import com.applemandi.android.data.repository.DataRepository
+import com.applemandi.android.domain.DebounceUseCase
 import com.applemandi.android.domain.PriceUseCase
 import com.applemandi.android.domain.VillageUseCase
 import com.applemandi.android.domain.SellerUseCase
@@ -18,6 +19,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
+    @Provides
+    fun provideDebounceUseCase() : DebounceUseCase{
+        return DebounceUseCase.Impl()
+    }
 
     @Provides
     fun providePriceUseCase() : PriceUseCase{
@@ -36,18 +42,18 @@ class AppModule {
 
 
     @Provides
-    fun provideDataRepository(apiHelper: APIHelper, databaseHelper: DatabaseHelper) : DataRepository {
-        return DataRepository.Impl(apiHelper, databaseHelper)
+    fun provideDataRepository(remoteDataSource: RemoteDataSource, localDataSource: LocalDataSource) : DataRepository {
+        return DataRepository.Impl(remoteDataSource, localDataSource)
     }
 
     @Provides
-    fun provideDatabaseHelper(appDatabase: AppDatabase) : DatabaseHelper {
-        return DatabaseHelper.Impl(appDatabase)
+    fun provideDatabaseHelper(appDatabase: AppDatabase) : LocalDataSource {
+        return LocalDataSource.Impl(appDatabase)
     }
 
     @Provides
-    fun provideApiService() : APIHelper {
-        return APIHelper.Impl()
+    fun provideApiService() : RemoteDataSource {
+        return RemoteDataSource.Impl()
     }
 
     @Singleton
